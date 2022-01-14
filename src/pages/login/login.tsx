@@ -3,7 +3,6 @@ import './login.less'
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { reqLogin } from '../../api';
-import { IDatas } from '../../api/CommonTypes';
 import { useNavigate } from 'react-router-dom';
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
@@ -12,18 +11,29 @@ export default function Login() {
     const navigate = useNavigate();
     const image = require('../../assets/logo.jpg');
     const user = memoryUtils.user
-    
+
     useEffect(() => {
         if (user && user._id) {
             navigate('/');
-            return
         }
     }, [])
+    
+    async function onFinish(values) {
 
-
-    async function onFinish(values: IDatas) {
         const resp = await reqLogin(values)
-        if (resp.data) {
+
+        //一：类型断言
+        // if (resp.status === 0) {
+        //     message.success('登录成功');
+        //     memoryUtils.user = (resp as any).data//保存到自定义的数据的工具模块
+        //     storageUtils.saveUser((resp as any).data)//保存到store
+        //     navigate('/');
+        // } else {
+        //     message.error(`登录失败：${(resp as any).msg}`)
+        // }
+
+        //二：js里面的in  放入ts 会有 类型收窄 的作用 
+        if ('data' in resp) {
             message.success('登录成功');
             memoryUtils.user = resp.data//保存到自定义的数据的工具模块
             storageUtils.saveUser(resp.data)//保存到store
@@ -31,6 +41,7 @@ export default function Login() {
         } else {
             message.error(`登录失败：${resp.msg}`)
         }
+        
     };
 
 

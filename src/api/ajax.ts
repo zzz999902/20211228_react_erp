@@ -11,9 +11,8 @@
 
 import axios from 'axios'
 import { message } from 'antd'
-import { IResponseData, IMovie, IResponseError } from './CommonTypes'
 
-export default function ajax(url, data = {}, type = 'GET'): Promise<IResponseData<IMovie> | IResponseError> {
+export default function ajax(url: string, data = {}, type = 'GET') {
 
     return new Promise((resolve, reject) => {
         let promise
