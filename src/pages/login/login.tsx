@@ -6,42 +6,45 @@ import { reqLogin } from '../../api';
 import { useNavigate } from 'react-router-dom';
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
-
-export default function Login() {
+import { connect } from 'react-redux';
+import { login } from '../../redux/action/loginUserAction'
+function Login(props) {
     const navigate = useNavigate();
     const image = require('../../assets/logo.jpg');
-    const user = memoryUtils.user
+    const user = props.user
 
     useEffect(() => {
         if (user && user._id) {
             navigate('/');
         }
-    }, [])
-    
+    }, [user])
+
     async function onFinish(values) {
 
-        const resp = await reqLogin(values)
+        props.login(values)
+        
+        // const resp = await reqLogin(values)
 
-        //一：类型断言
-        // if (resp.status === 0) {
+        // //一：类型断言
+        // // if (resp.status === 0) {
+        // //     message.success('登录成功');
+        // //     memoryUtils.user = (resp as any).data//保存到自定义的数据的工具模块
+        // //     storageUtils.saveUser((resp as any).data)//保存到store
+        // //     navigate('/');
+        // // } else {
+        // //     message.error(`登录失败：${(resp as any).msg}`)
+        // // }
+
+        // //二：js里面的in  放入ts 会有 类型收窄 的作用 
+        // if ('data' in resp) {
         //     message.success('登录成功');
-        //     memoryUtils.user = (resp as any).data//保存到自定义的数据的工具模块
-        //     storageUtils.saveUser((resp as any).data)//保存到store
+        //     memoryUtils.user = resp.data//保存到自定义的数据的工具模块
+        //     storageUtils.saveUser(resp.data)//保存到store
         //     navigate('/');
         // } else {
-        //     message.error(`登录失败：${(resp as any).msg}`)
+        //     message.error(`登录失败：${resp.msg}`)
         // }
 
-        //二：js里面的in  放入ts 会有 类型收窄 的作用 
-        if ('data' in resp) {
-            message.success('登录成功');
-            memoryUtils.user = resp.data//保存到自定义的数据的工具模块
-            storageUtils.saveUser(resp.data)//保存到store
-            navigate('/');
-        } else {
-            message.error(`登录失败：${resp.msg}`)
-        }
-        
     };
 
 
@@ -67,6 +70,7 @@ export default function Login() {
                 <h1>后台管理系统</h1>
             </header>
             <section className='login-content'>
+                <div className={user.errorMsg ? 'error-msg show' : 'error-msg'}>{user.errorMsg}</div>
                 <h2>用户登陆</h2>
                 <Form
                     name="basic"
@@ -117,3 +121,15 @@ export default function Login() {
         </div>
     )
 }
+
+
+
+const mapStateToProps = state => ({
+    user: state.users
+})
+
+const creators = {
+    login,
+};
+
+export default connect(mapStateToProps, creators)(Login)

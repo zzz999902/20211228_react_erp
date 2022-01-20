@@ -79,7 +79,6 @@ function PicturesWall(props) {
 
     useEffect(() => {
         const { imgs } = props
-
         if (imgs && imgs.length > 0) {
             const fileLists = imgs.map((img, index) => ({
                 uid: -index, // 每个file都有自己唯一的id

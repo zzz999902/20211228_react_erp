@@ -17,7 +17,6 @@ export default function ProductHome() {
         pageNum: 1,
         pageSize: PAGE_SIZE
     })
-
     const Catdtitle = (
         <Space>
             <Select value={serchType} onChange={(v) => setserchType(v)}>
@@ -28,12 +27,9 @@ export default function ProductHome() {
             <Button shape="round" type="primary" onClick={() => getProducts()}>搜索</Button>
         </Space>
     )
-
-
     const CardButton = (
         <Button shape="round" type="primary" onClick={() => navigate('/products/product/addupdate')} icon={<PlusCircleOutlined />}>添加商品</Button>
     )
-
     const columns = [
         {
             title: '商品名称',
@@ -88,21 +84,26 @@ export default function ProductHome() {
             //刷新本页数据 error
         }
     }
-
+    //搜索
     async function getProducts() {
-        let result;
-        console.log(reqProd)
-        if (serchName) {
-            result = await reqSearchProducts({ ...reqProd, serchName, serchType })
-            // if (reqProd.pageNum !== 1) {
-            //     setreqProd({
-            //         pageNum: 1,
-            //         pageSize: PAGE_SIZE
-            //     })
-            // }
-        } else {
-            result = await reqProducts(reqProd)
+        const result = await reqSearchProducts({ ...reqProd, pageNum: 1, serchName, serchType })
+
+        if (result.status === 0) {
+            console.log(result)
+            const { list, total, pageNum, pageSize } = result.data
+            setreqProd({
+                pageNum: pageNum,
+                pageSize: pageSize
+            })
+            settotals(total)
+            setdataSource(list)
+
         }
+        setcategorysLoadin(false)
+    }
+    //获取
+    async function getData() {
+        const result = await reqProducts(reqProd)
         if (result.status === 0) {
             console.log(result)
             const { list, total } = result.data
@@ -111,10 +112,10 @@ export default function ProductHome() {
         }
         setcategorysLoadin(false)
     }
-
     useEffect(() => {
-        getProducts()
-    }, [reqProd])
+        //获取
+        getData()
+    }, [])
 
     return (
         <Card title={Catdtitle} extra={CardButton}>
@@ -134,7 +135,7 @@ export default function ProductHome() {
                             pageNum,
                             pageSize,
                         })
-                        // getProducts()
+                        getData()
                     }
                 }}
             />

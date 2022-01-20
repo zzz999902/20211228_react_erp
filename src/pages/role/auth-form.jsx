@@ -3,23 +3,29 @@ import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import React, { useState, useEffect } from 'react'
 import { reqAddRole, reqUpdateRole } from '../../api/index'
 import menuList from '../../config/menuConfig'
-import memoryUtils from '../../utils/memoryUtils'
+// import memoryUtils from '../../utils/memoryUtils'
 import { useNavigate } from 'react-router-dom';
-import storageUtils from '../../utils/storageUtils';
+// import storageUtils from '../../utils/storageUtils';
+
+import { logout } from '../../redux/action/loginUserAction';
+import { connect } from 'react-redux';
+
 const { TreeNode } = Tree;
-export default function AddFrom({ getRoles, role, delemoalAuth, isModalAuth }) {
+
+function AddFrom({ user, logout, getRoles, role, delemoalAuth, isModalAuth }) {
     const [checkedKeys, setCheckedKeys] = useState(role.menus)
     const navigate = useNavigate();
     const [form] = Form.useForm()
     async function handleOk() {
         role.menus = checkedKeys
-        role.auth_name = memoryUtils.user.username
+        role.auth_name = user.username
         const resp = await reqUpdateRole(role)
         if (resp.status === 0) {
-            if (role._id === memoryUtils.user.role_id) {
-                memoryUtils.user = {}
-                storageUtils.removeUser()
-                navigate('/login')
+            if (role._id === user.role_id) {
+                // memoryUtils.user = {}
+                // storageUtils.removeUser()
+                logout()
+                // navigate('/login')
                 message.warning("当前用户角色得权限修改了,请重新登录！")
             } else {
                 message.success("设置权限成功！")
@@ -85,3 +91,14 @@ export default function AddFrom({ getRoles, role, delemoalAuth, isModalAuth }) {
         </Modal >
     )
 }
+
+
+const mapStateToProps = state => ({
+    user: state.users
+})
+
+const creators = {
+    logout
+};
+
+export default connect(mapStateToProps, creators)(AddFrom)

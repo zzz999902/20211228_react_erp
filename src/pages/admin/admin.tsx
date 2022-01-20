@@ -13,19 +13,21 @@ import User from '../user/user'
 import Bar from '../charts/bar'
 import Line from '../charts/line'
 import Pie from '../charts/pie'
+import Notfound from '../not-found'
+import { connect } from 'react-redux';
 
 const { Footer, Sider, Content } = Layout;
 
-export default function Admin() {
+function Admin(props) {
 
     const navigate = useNavigate();
-    const user = memoryUtils.user
+    const user = props.user
 
     useEffect(() => {
         if (!user || !user._id) {
             navigate('/login');
         }
-    }, [])
+    }, [user])
 
     return (
         <Layout style={{ width: "100%", minHeight: "100%" }}>
@@ -36,7 +38,8 @@ export default function Admin() {
                 <Headers></Headers>
                 <Content style={{ margin: '20px', backgroundColor: "#fff" }}>
                     <Routes>
-                        <Route path='home' element={<Home />} />
+                        {/* <Route path='/' element={<Home />} /> */}
+                        <Route path='/' element={<Home />} />
                         <Route path='products/category' element={<Category />} />
                         <Route path='products/product/*' element={<Product />} />
                         <Route path='role' element={<Role />} />
@@ -44,7 +47,7 @@ export default function Admin() {
                         <Route path='charts/bar' element={<Bar />} />
                         <Route path='charts/line' element={<Line />} />
                         <Route path='charts/pie' element={<Pie />} />
-                        <Route path="*" element={<Navigate to="/home" />} />
+                        <Route path='*' element={<Notfound />} />
                     </Routes>
                 </Content>
                 <Footer style={{ textAlign: 'center', color: '#cccccc' }}>推荐使用谷歌浏览器，可以获得更佳页面操作体验</Footer>
@@ -52,3 +55,11 @@ export default function Admin() {
         </Layout>
     )
 }
+
+function mapStateToProps(state) {
+    return {
+        user: state.users
+    }
+}
+
+export default connect(mapStateToProps)(Admin)
