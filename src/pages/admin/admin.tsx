@@ -14,6 +14,7 @@ import Bar from '../charts/bar'
 import Line from '../charts/line'
 import Pie from '../charts/pie'
 import Notfound from '../not-found'
+import Traffic from '../traffic'
 import { connect } from 'react-redux';
 
 const { Footer, Sider, Content } = Layout;
@@ -47,6 +48,7 @@ function Admin(props) {
                         <Route path='charts/bar' element={<Bar />} />
                         <Route path='charts/line' element={<Line />} />
                         <Route path='charts/pie' element={<Pie />} />
+                        <Route path='order' element={<Traffic />} />
                         <Route path='*' element={<Notfound />} />
                     </Routes>
                 </Content>

@@ -56,12 +56,11 @@ const menuList = [
       },
     ]
   },
-
-  // {
-  //   title: '订单管理',
-  //   key: '/order',
-  //   icon: 'AccountBookOutlined',
-  // },
+  {
+    title: '访问量统计',
+    key: '/order',
+    icon: 'AreaChartOutlined',
+  },
 ]
 
 export default menuList
