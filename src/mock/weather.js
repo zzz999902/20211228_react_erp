@@ -161,12 +161,12 @@ Mock.mock("/manage/product/lists?pageNum=1&pageSize=3", "get", {
     }
 });
 
-Mock.mock('UserVolume', post, {
+Mock.mock('/UserVolume', "get", {
     status: 0,
     data: {
         internal: "@cparagraph(1, 1500)",
         agent: "@cparagraph(1, 1500)",
         supplier: "@cparagraph(1, 1500)",
-        experts: "@cparagraph(1, 1500)"
+        experts: "@cparagraph(1, 1500)",
     }
 })

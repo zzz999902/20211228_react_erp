@@ -51,7 +51,7 @@ export function reqProducts(movie): Promise<any> {
 export function reqSearchProducts(movie): Promise<any> {
   return ajax('/manage/product/search', {
     ...movie,
-    [movie.serchType]:[movie.serchName]
+    [movie.serchType]: [movie.serchName]
   })
 }
 
@@ -118,8 +118,10 @@ export function reqDeleteUser(userId): Promise<any> {
   return ajax('/manage/user/delete', { userId }, 'POST')
 }
 
-
-
+//获取点击量用户
+export function getUserVolume(value): Promise<any> {
+  return ajax('/UserVolume', { value })
+}
 
 
 
